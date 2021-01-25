@@ -10,8 +10,6 @@ nDTMB2 = 59
 nDTMB3 = 73
 nDTMB4 = 102
 
-nDTMBTrain = 40
-
 class Muon(object):
     def __init__(self, x0,y0, m):
         self.x0 = x0
@@ -141,51 +139,6 @@ class MB(object):
             for d in l.DTlist:
                 d.isIn(muon)
       
-class Pattern(object):
-    def __init__(self, seeds, hits):
-        self.seeds = seeds
-        self.hits  = hits
-        self.len   = len(hits)
-        self.busted = False
-        self.overlap = 0
-        self.overlapsw = []
-    def hasseed(self, hit):
-        if hit == seed:
-            return True
-        else:
-            return False
-    def hashit(self, hit):
-        for h in self.hits:
-            if h[:2] == hit:
-                return True
-        return False
-
-    def recoHits(self, extra = 0, reverse = 1):
-        return [[h[0],reverse*h[1]+extra] for h in self.hits]
-
-    def genHits(self, extra = 0, reverse = 1):
-        return [[h[0],reverse*h[1]+extra, h[2]] for h in self.hits]
-
-    def isEqual(self, other):
-        isEqual = True
-        for h in self.hits:
-            if h in other.hits: continue
-            else: isEqual = False
-        for h in other.hits:
-            if h in self.hits: continue
-            else: isEqual = False
-
-
-        if isEqual: self.overlap += 1
-        self.overlapsw.append(isEqual)
-        return isEqual
-
-def patternSorter(p):
-    layers  = [h[0] for h in p[0]]
-    layers  = list(dict.fromkeys(layers))
-    nLayers = len(layers)
-    nHits   = len(p[0])
-    return nLayers*1000 + nHits
 
 #We need to add "Fake" cells behind/after for the training
 l1 = Layer(0,0,nDTMB1, idx=1)
@@ -199,18 +152,6 @@ ll4 = Layer(0.5*globalDTwidth,7*globalDTheight + SLgap,nDTMB1, idx=8)
 
 MB1 = MB([l1,l2,l3,l4,ll1,ll2,ll3,ll4])
 
-
-l1f = Layer(-10*globalDTwidth,0,nDTMB1+10, idx=1, offset=10)
-l2f = Layer(0.5*globalDTwidth -10*globalDTwidth,globalDTheight,nDTMB1+10, idx=2, offset=10)
-l3f = Layer(-10*globalDTwidth,2*globalDTheight,nDTMB1+10, idx=3, offset=10)
-l4f = Layer(0.5*globalDTwidth -10*globalDTwidth,3*globalDTheight,nDTMB1+10, idx=4, offset=10)
-ll1f = Layer(-2.*globalDTwidth,4*globalDTheight + SLgap,nDTMB1+12, idx=5, offset=2)
-ll2f = Layer(-1.5*globalDTwidth ,5*globalDTheight + SLgap,nDTMB1+12, idx=6, offset=2)
-ll3f = Layer(-2.*globalDTwidth,6*globalDTheight + SLgap,nDTMB1+12, idx=7, offset=2)
-ll4f = Layer(-1.5*globalDTwidth,7*globalDTheight + SLgap,nDTMB1+12, idx=8, offset=2)
-
-MB1f = MB([l1f,l2f,l3f,l4f,ll1f,ll2f,ll3f,ll4f])
-
 ##### Extra things ####
 l1 = Layer(0,0,nDTMB2)
 l2 = Layer(0.5*globalDTwidth,globalDTheight,nDTMB2)
@@ -223,7 +164,6 @@ ll4 = Layer(0.5*globalDTwidth,7*globalDTheight + SLgap,nDTMB2)
 
 MB2 = MB([l1,l2,l3,l4,ll1,ll2,ll3,ll4])
 
-
 l1 = Layer(0,0,nDTMB3)
 l2 = Layer(0.5*globalDTwidth,globalDTheight,nDTMB3)
 l3 = Layer(0,2*globalDTheight,nDTMB3)
@@ -235,7 +175,6 @@ ll4 = Layer(0.5*globalDTwidth,7*globalDTheight + SLgap,nDTMB3)
 
 MB3 = MB([l1,l2,l3,l4,ll1,ll2,ll3,ll4])
 
-
 l1 = Layer(0,0,nDTMB4)
 l2 = Layer(0.5*globalDTwidth,globalDTheight,nDTMB4)
 l3 = Layer(0,2*globalDTheight,nDTMB4)
@@ -246,34 +185,4 @@ ll3 = Layer(0,6*globalDTheight + SLgap,nDTMB4)
 ll4 = Layer(0.5*globalDTwidth,7*globalDTheight + SLgap,nDTMB4)
 
 MB4 = MB([l1,l2,l3,l4,ll1,ll2,ll3,ll4])
-
-
-#We need to add "Fake" cells behind/after for the training
-l1 = Layer(0,0,nDTMBTrain, idx=1)
-l2 = Layer(0.5*globalDTwidth,globalDTheight,nDTMBTrain, idx=2)
-l3 = Layer(0,2*globalDTheight,nDTMBTrain, idx=3)
-l4 = Layer(0.5*globalDTwidth,3*globalDTheight,nDTMBTrain, idx=4)
-ll1 = Layer(0,4*globalDTheight + SLgap,nDTMBTrain, idx=5)
-ll2 = Layer(0.5*globalDTwidth,5*globalDTheight + SLgap,nDTMBTrain, idx=6)
-ll3 = Layer(0,6*globalDTheight + SLgap,nDTMBTrain, idx=7)
-ll4 = Layer(0.5*globalDTwidth,7*globalDTheight + SLgap,nDTMBTrain, idx=8)
-
-MBTrain = MB([l1,l2,l3,l4,ll1,ll2,ll3,ll4])
-
-
-l1f = Layer(-30*globalDTwidth,0,nDTMBTrain+60, idx=1, offset=30)
-l2f = Layer(0.5*globalDTwidth -30*globalDTwidth,globalDTheight,nDTMBTrain+60, idx=2, offset=30)
-l3f = Layer(-30*globalDTwidth,2*globalDTheight,nDTMBTrain+60, idx=3, offset=30)
-l4f = Layer(0.5*globalDTwidth -30*globalDTwidth,3*globalDTheight,nDTMBTrain+60, idx=4, offset=30)
-ll1f = Layer(-30.*globalDTwidth,4*globalDTheight + SLgap,nDTMBTrain+62, idx=5, offset=30)
-ll2f = Layer(-29.5*globalDTwidth ,5*globalDTheight + SLgap,nDTMBTrain+62, idx=6, offset=30)
-ll3f = Layer(-30.*globalDTwidth,6*globalDTheight + SLgap,nDTMBTrain+62, idx=7, offset=30)
-ll4f = Layer(-29.5*globalDTwidth,7*globalDTheight + SLgap,nDTMBTrain+62, idx=8, offset=30)
-
-MBTrainf = MB([l1f,l2f,l3f,l4f,ll1f,ll2f,ll3f,ll4f])
-
-
-#MBTrainf.plot()
-#plt.axis([0,25,-5,35])
-#plt.show()
 
